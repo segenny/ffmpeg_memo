@@ -6,24 +6,25 @@ Some completed ffmpeg command to create slideshow video with effect from images 
 ## Blend Effect slideshow video
 ```
 ffmpeg -framerate 20 \
--loop 1 -t 0.5 -i 1.jpg \
--loop 1 -t 0.5 -i 2.jpg \
--loop 1 -t 0.5 -i 3.jpg \
--loop 1 -t 0.5 -i 4.jpg \
+-loop 1 -t 0.5 -i sample1.png \
+-loop 1 -t 0.5 -i sample2.png \
+-loop 1 -t 0.5 -i sample3.png \
+-loop 1 -t 0.5 -i sample4.png \
 -c:v libx264 \
 -filter_complex " \
 [1:v][0:v]blend=all_expr='A*(if(gte(T,0.5),1,T/0.5))+B*(1-(if(gte(T,0.5),1,T/0.5)))'[b1v]; \
 [2:v][1:v]blend=all_expr='A*(if(gte(T,0.5),1,T/0.5))+B*(1-(if(gte(T,0.5),1,T/0.5)))'[b2v]; \
 [3:v][2:v]blend=all_expr='A*(if(gte(T,0.5),1,T/0.5))+B*(1-(if(gte(T,0.5),1,T/0.5)))'[b3v]; \
 [0:v][b1v][1:v][b2v][2:v][b3v][3:v]concat=n=7:v=1:a=0,format=yuv420p[v]" -map "[v]" out.mp4
+ 
 ```
 
 ## Zoom and blend effect slideshow video
 ```
 ffmpeg -y \
- -loop 1 -i 1.jpg \
- -loop 1 -i 2.jpg \
- -loop 1 -i 3.jpg \
+ -loop 1 -i sample1.png \
+ -loop 1 -i sample2.png \
+ -loop 1 -i sample3.png \
  -filter_complex " \
 [0:v]zoompan=z='min(zoom+0.0015,1.5)':d=125,trim=duration=5,blend=all_expr='A*(if(gte(T,0.5),1,T/0.5))+B*(1-(if(gte(T,0.5),1,T/0.5)))',setpts=PTS-STARTPTS[v0]; \
 [1:v]zoompan=z='min(zoom+0.0015,1.5)':d=125,trim=duration=5,blend=all_expr='A*(if(gte(T,0.5),1,T/0.5))+B*(1-(if(gte(T,0.5),1,T/0.5)))',setpts=PTS-STARTPTS[v1]; \
@@ -34,10 +35,10 @@ ffmpeg -y \
 ## Zoomout and Fade
 ```
 ffmpeg \
--t 5 -i 1.jpg \
--t 5 -i 2.jpg \
--t 5 -i 3.jpg \
--t 5 -i 4.jpg  -filter_complex " \
+-t 5 -i sample1.png \
+-t 5 -i sample2.png \
+-t 5 -i sample3.png \
+-t 5 -i sample4.png  -filter_complex " \
 [0:v]zoompan=z='min(max(zoom,pzoom)+0.015,2)':s=1080x1080:d=50:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)',fade=t=out:st=4:d=1[v0]; \
 [1:v]zoompan=z='min(max(zoom,pzoom)+0.015,2)':s=1080x1080:d=50:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)',fade=t=in:st=0:d=1,fade=t=out:st=4:d=2[v1]; \
 [2:v]zoompan=z='min(max(zoom,pzoom)+0.015,2)':s=1080x1080:d=50:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)',fade=t=in:st=0:d=1,fade=t=out:st=4:d=2[v2]; \
@@ -48,10 +49,10 @@ ffmpeg \
 ## Zoomin and Fade
 ```
 ffmpeg \
--t 5 -i 1.jpg \
--t 5 -i 2.jpg \
--t 5 -i 3.jpg \
--t 5 -i 4.jpg  -filter_complex " \
+-t 5 -i sample1.png \
+-t 5 -i sample2.png \
+-t 5 -i sample3.png \
+-t 5 -i sample4.png  -filter_complex " \
 [0:v]zoompan=z='if(lte(zoom,1.0),1.5,max(1.001,zoom-0.015))':s=1080x1080:d=50:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)',fade=t=out:st=4:d=1[v0]; \
 [1:v]zoompan=z='if(lte(zoom,1.0),1.5,max(1.001,zoom-0.015))':s=1080x1080:d=50:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)',fade=t=in:st=0:d=1,fade=t=out:st=4:d=2[v1]; \
 [2:v]zoompan=z='if(lte(zoom,1.0),1.5,max(1.001,zoom-0.015))':s=1080x1080:d=50:x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)',fade=t=in:st=0:d=1,fade=t=out:st=4:d=2[v2]; \
